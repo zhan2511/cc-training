@@ -7,6 +7,10 @@
 struct ContestMessage
 {
   struct Header {
+
+    /* Message types: 0 = data, 1 = ack */
+    uint64_t message_type;
+
     uint64_t sequence_number;
     uint64_t send_timestamp;
 

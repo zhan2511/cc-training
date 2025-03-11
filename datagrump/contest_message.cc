@@ -20,12 +20,13 @@ uint64_t get_header_field( const size_t n, const string & str )
 
 /* Parse header from wire */
 ContestMessage::Header::Header( const string & str )
-  : sequence_number( get_header_field( 0, str ) ),
-    send_timestamp( get_header_field( 1, str ) ),
-    ack_sequence_number( get_header_field( 2, str ) ),
-    ack_send_timestamp( get_header_field( 3, str ) ),
-    ack_recv_timestamp( get_header_field( 4, str ) ),
-    ack_payload_length( get_header_field( 5, str ) )
+  : message_type( get_header_field( 0, str ) ),
+    sequence_number( get_header_field( 1, str ) ),
+    send_timestamp( get_header_field( 2, str ) ),
+    ack_sequence_number( get_header_field( 3, str ) ),
+    ack_send_timestamp( get_header_field( 4, str ) ),
+    ack_recv_timestamp( get_header_field( 5, str ) ),
+    ack_payload_length( get_header_field( 6, str ) )
 {}
 
 /* Parse incoming message from wire */
@@ -51,7 +52,8 @@ string put_header_field( const uint64_t n )
 /* Make wire representation of header */
 string ContestMessage::Header::to_string() const
 {
-  return put_header_field( sequence_number )
+  return put_header_field( message_type )
+    + put_header_field( sequence_number )
     + put_header_field( send_timestamp )
     + put_header_field( ack_sequence_number )
     + put_header_field( ack_send_timestamp )
@@ -69,6 +71,10 @@ string ContestMessage::to_string() const
 void ContestMessage::transform_into_ack( const uint64_t sequence_number,
 					 const uint64_t recv_timestamp )
 {
+
+  /* set the message type to 1 */
+  header.message_type = 1;
+
   /* ack the old sequence number */
   header.ack_sequence_number = header.sequence_number;
 
@@ -93,7 +99,8 @@ ContestMessage::ContestMessage( const uint64_t s_sequence_number,
 
 /* Header for new message */
 ContestMessage::Header::Header( const uint64_t s_sequence_number )
-  : sequence_number( s_sequence_number ),
+  : message_type( 0 ),
+    sequence_number( s_sequence_number ),
     send_timestamp( -1 ),
     ack_sequence_number( -1 ),
     ack_send_timestamp( -1 ),
@@ -104,5 +111,5 @@ ContestMessage::Header::Header( const uint64_t s_sequence_number )
 /* Is this message an ack? */
 bool ContestMessage::is_ack() const
 {
-  return header.ack_sequence_number != uint64_t( -1 );
+  return header.message_type == 1;
 }
