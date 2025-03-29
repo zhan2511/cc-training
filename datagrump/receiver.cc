@@ -33,10 +33,16 @@ int main( int argc, char *argv[] )
 
   uint64_t sequence_number = 0;
 
+  /* counter for the number of received datagrams for Piggyback */
+  int seq_counter = 0;
+
   /* Loop and acknowledge every incoming datagram back to its source */
   while ( true ) {
     const UDPSocket::received_datagram recd = socket.recv();
     ContestMessage message = recd.payload;
+
+    /* add the counter */
+    seq_counter++;
 
     /* assemble the acknowledgment */
     message.transform_into_ack( sequence_number++, recd.timestamp );
@@ -44,8 +50,13 @@ int main( int argc, char *argv[] )
     /* timestamp the ack just before sending */
     message.set_send_timestamp();
 
-    /* send the ack */
-    socket.sendto( recd.source_address, message.to_string() );
+    if(seq_counter == 2){
+      /* send the ack */
+      socket.sendto( recd.source_address, message.to_string() );
+      /* reset the counter */
+      seq_counter = 0;
+    }
+
   }
 
   return EXIT_SUCCESS;
