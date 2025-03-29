@@ -33,7 +33,7 @@ int main( int argc, char *argv[] )
 
   uint64_t sequence_number = 0;
 
-  /* counter for the number of received datagrams for Piggyback */
+  /* counter for the number of received datagrams for Delayed ACK */
   int seq_counter = 0;
 
   /* Loop and acknowledge every incoming datagram back to its source */
