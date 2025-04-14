@@ -50,8 +50,8 @@ int main( int argc, char *argv[] )
     << " last_ack_num : " << last_ack_num << endl;
 
     /* assemble the acknowledgment */
-    if (message.header.sequence_number == last_ack_num || last_ack_num == 0){
-      last_ack_num = message.header.sequence_number + 1;
+    if (message.header.sequence_number == last_ack_num + 1 || last_ack_num == 0){
+      last_ack_num = message.header.sequence_number;
       message.transform_into_ack( sequence_number++, recd.timestamp );
     }else {
       message.header.sequence_number = last_ack_num;
