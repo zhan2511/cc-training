@@ -36,6 +36,8 @@ int main( int argc, char *argv[] )
   /* counter for the number of received datagrams for Delayed ACK */
   int seq_counter = 0;
 
+  int should_ack_num = 0;
+
   /* Loop and acknowledge every incoming datagram back to its source */
   while ( true ) {
     const UDPSocket::received_datagram recd = socket.recv();
@@ -44,8 +46,14 @@ int main( int argc, char *argv[] )
     /* add the counter */
     seq_counter++;
 
-    /* assemble the acknowledgment */
-    message.transform_into_ack( sequence_number++, recd.timestamp );
+    if (message.header.sequence_number == should_ack_num){
+      /* assemble the acknowledgment */
+      should_ack_num = message.header.sequence_number + 1;
+      message.transform_into_ack( sequence_number++, recd.timestamp );
+    }else {
+      message.header.sequence_number = should_ack_num;
+      message.transform_into_ack( sequence_number++, recd.timestamp );
+    }
 
     /* timestamp the ack just before sending */
     message.set_send_timestamp();

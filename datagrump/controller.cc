@@ -14,7 +14,6 @@ Controller::Controller( const bool debug )
 unsigned int Controller::window_size()
 {
   /* Default: fixed window size of 100 outstanding datagrams */
-  unsigned int the_window_size = 50;
 
   if ( debug_ ) {
     cerr << "At time " << timestamp_ms()
@@ -34,6 +33,15 @@ void Controller::datagram_was_sent( const uint64_t sequence_number,
 {
   /* Default: take no action */
 
+  /* If the datagram was sent because of a timeout, then we need to halve the window size.
+  * Otherwise, we can increase the window size by 1. */
+  if (after_timeout){
+    cout << "timeout:" << sequence_number << endl;
+    the_window_size = the_window_size / 2;
+  }else {
+    the_window_size = the_window_size + 1;
+  }
+
   if ( debug_ ) {
     cerr << "At time " << send_timestamp
 	 << " sent datagram " << sequence_number << " (timeout = " << after_timeout << ")\n";
@@ -52,7 +60,14 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
 {
   /* Default: take no action */
 
-  cout << "num_acked:" << sequence_number_acked << endl;
+  // cout << "num_acked:" << sequence_number_acked << endl;
+
+  // Repeated ACK
+  if (sequence_number_acked == last_ack){
+    cout << "got same ack" << sequence_number_acked << endl;
+  }else {
+    last_ack = sequence_number_acked;
+  }
 
   if ( debug_ ) {
     cerr << "At time " << timestamp_ack_received
