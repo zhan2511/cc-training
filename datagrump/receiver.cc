@@ -36,6 +36,7 @@ int main( int argc, char *argv[] )
   /* counter for the number of received datagrams for Delayed ACK */
   int seq_counter = 0;
 
+  // last received number
   uint64_t last_ack_num = 0;
 
   /* Loop and acknowledge every incoming datagram back to its source */
