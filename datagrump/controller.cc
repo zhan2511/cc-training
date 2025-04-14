@@ -33,11 +33,12 @@ void Controller::datagram_was_sent( const uint64_t sequence_number,
 {
   /* Default: take no action */
 
-  /* If the datagram was sent because of a timeout, then we need to halve the window size.
-  * Otherwise, we can increase the window size by 1. */
+  // Timeout
   if (after_timeout){
-    cout << "timeout:" << sequence_number << endl;
+    cout << "timeout : " << sequence_number << endl;
+    the_window_size = the_window_size / 2;
   }else {
+    the_window_size = the_window_size + 1;
   }
 
   if ( debug_ ) {

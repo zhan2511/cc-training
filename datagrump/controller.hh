@@ -9,8 +9,8 @@ class Controller
 {
 private:
   bool debug_; /* Enables debugging output */
-  unsigned int the_window_size = 50;
-  uint64_t last_ack = 0;
+  unsigned int the_window_size = 50; // initial window size
+  uint64_t last_ack = 0; // last ack num received
 
   /* Add member variables here */
 

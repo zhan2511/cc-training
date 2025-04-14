@@ -46,16 +46,17 @@ int main( int argc, char *argv[] )
     /* add the counter */
     seq_counter++;
 
-    // cout << "sequence_number : " << message.header.sequence_number
-    // << " should_ack_num : " << should_ack_num << endl;
+    cout << "sequence_number : " << message.header.sequence_number
+    << " should_ack_num : " << should_ack_num << endl;
 
+    /* assemble the acknowledgment */
     if (message.header.sequence_number == should_ack_num || should_ack_num == 0){
-      /* assemble the acknowledgment */
       should_ack_num = message.header.sequence_number + 1;
       message.transform_into_ack( sequence_number++, recd.timestamp );
     }else {
-      message.header.sequence_number = should_ack_num;
+      message.header.sequence_number = should_ack_num - 1;
       message.transform_into_ack( sequence_number++, recd.timestamp );
+      // send the ack immediately
       if(seq_counter != 2){
         socket.sendto( recd.source_address, message.to_string() );
       }
