@@ -36,7 +36,7 @@ int main( int argc, char *argv[] )
   /* counter for the number of received datagrams for Delayed ACK */
   int seq_counter = 0;
 
-  uint64_t should_ack_num = 0;
+  uint64_t last_ack_num = 0;
 
   /* Loop and acknowledge every incoming datagram back to its source */
   while ( true ) {
@@ -47,14 +47,14 @@ int main( int argc, char *argv[] )
     seq_counter++;
 
     cout << "sequence_number : " << message.header.sequence_number
-    << " should_ack_num : " << should_ack_num << endl;
+    << " last_ack_num : " << last_ack_num << endl;
 
     /* assemble the acknowledgment */
-    if (message.header.sequence_number == should_ack_num || should_ack_num == 0){
-      should_ack_num = message.header.sequence_number + 1;
+    if (message.header.sequence_number == last_ack_num || last_ack_num == 0){
+      last_ack_num = message.header.sequence_number + 1;
       message.transform_into_ack( sequence_number++, recd.timestamp );
     }else {
-      message.header.sequence_number = should_ack_num - 1;
+      message.header.sequence_number = last_ack_num;
       message.transform_into_ack( sequence_number++, recd.timestamp );
       // send the ack immediately
       if(seq_counter != 2){
