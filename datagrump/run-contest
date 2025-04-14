@@ -22,7 +22,7 @@ chomp( my $prefix = qx{dirname `which mm-link`} );
 my $tracedir = $prefix . q{/../share/mahimahi/traces};
 
 # run the sender inside a linkshell and a delayshell
-my @command = qw{mm-delay 20 mm-loss uplink 0.01 mm-link UPLINK DOWNLINK};
+my @command = qw{mm-delay 20 mm-loss uplink 1 mm-link UPLINK DOWNLINK};
 
 # display livegraphs if we seem to be running under X
 if ( defined $ENV{ 'DISPLAY' } ) {

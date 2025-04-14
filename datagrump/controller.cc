@@ -37,9 +37,7 @@ void Controller::datagram_was_sent( const uint64_t sequence_number,
   * Otherwise, we can increase the window size by 1. */
   if (after_timeout){
     cout << "timeout:" << sequence_number << endl;
-    the_window_size = the_window_size / 2;
   }else {
-    the_window_size = the_window_size + 1;
   }
 
   if ( debug_ ) {
@@ -60,10 +58,11 @@ void Controller::ack_received( const uint64_t sequence_number_acked,
 {
   /* Default: take no action */
 
-  // cout << "num_acked:" << sequence_number_acked << endl;
+  cout << "num_acked:" << sequence_number_acked
+      << "    last_ack:" << last_ack << endl;
 
   // Repeated ACK
-  if (sequence_number_acked == last_ack){
+  if (sequence_number_acked == last_ack && last_ack != 0){
     cout << "got same ack" << sequence_number_acked << endl;
   }else {
     last_ack = sequence_number_acked;

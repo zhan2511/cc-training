@@ -10,8 +10,7 @@ class Controller
 private:
   bool debug_; /* Enables debugging output */
   unsigned int the_window_size = 50;
-  uint64_t last_ack = -1;
-
+  uint64_t last_ack = 0;
 
   /* Add member variables here */
 
