@@ -10,12 +10,12 @@ class Controller
 private:
   bool debug_; /* Enables debugging output */
   double the_window_size = 1; // window size
-  unsigned int ssthresh = 50; // ssthresh
+  unsigned int ssthresh = 16; // ssthresh
   uint64_t last_ack = 0; // last ack num received
   uint64_t SampleRTT = 0; // sample RTT
   uint64_t EstimatedRTT = 0; // estimated RTT
   uint64_t DevRTT = 0; // deviation RTT
-  uint64_t RTO = 0; // RTO
+  uint64_t RTO = 1000; // RTO
 
   /* Add member variables here */
 

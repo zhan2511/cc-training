@@ -37,15 +37,15 @@ void Controller::datagram_was_sent(const uint64_t sequence_number,
   /* Default: take no action */
 
   // Timeout
-  if (after_timeout)
+  if (after_timeout && sequence_number != 0 && sequence_number != 1)
   {
     cout << "timeout : " << sequence_number << endl;
     ssthresh = the_window_size / 2;
     the_window_size = 1;
+    cout << "cwnd:" << the_window_size << " ssthresh:" << ssthresh << endl;
   }
   else
-  {
-  }
+  {}
 
   if (debug_)
   {
@@ -73,6 +73,8 @@ void Controller::ack_received(const uint64_t sequence_number_acked,
   if (last_ack == 0)
   {
     last_ack = sequence_number_acked;
+    the_window_size = the_window_size + 1;
+    cout << "cwnd:" << the_window_size << " ssthresh:" << ssthresh << endl;
     // initial RTO
     SampleRTT = timestamp_ack_received - send_timestamp_acked;
     EstimatedRTT = SampleRTT;
@@ -93,12 +95,16 @@ void Controller::ack_received(const uint64_t sequence_number_acked,
     if (the_window_size < ssthresh)
     {
       // slow start : increase by 1 every ack
-      the_window_size = the_window_size + 1;
+      // receiver ack every two data
+      the_window_size = the_window_size + 2;
+      cout << "cwnd:" << the_window_size << " ssthresh:" << ssthresh << endl;
     }
     else
     {
       // congestion avoidance : increase by 1 every round of acks
-      the_window_size = the_window_size + 1 / the_window_size;
+      // receiver ack every two data
+      the_window_size = the_window_size + 2 / the_window_size;
+      cout << "cwnd:" << the_window_size << " ssthresh:" << ssthresh << endl;
     }
     // calculate RTO
     SampleRTT = timestamp_ack_received - send_timestamp_acked;

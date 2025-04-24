@@ -47,8 +47,8 @@ int main( int argc, char *argv[] )
     /* add the counter */
     seq_counter++;
 
-    cout << "sequence_number : " << message.header.sequence_number
-    << " last_ack_num : " << last_ack_num << endl;
+    // cout << "sequence_number : " << message.header.sequence_number
+    // << " last_ack_num : " << last_ack_num << endl;
 
     /* assemble the acknowledgment */
     if (message.header.sequence_number == last_ack_num + 1 || last_ack_num == 0){
