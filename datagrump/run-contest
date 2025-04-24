@@ -29,7 +29,7 @@ if ( defined $ENV{ 'DISPLAY' } ) {
   push @command, qw{--meter-uplink --meter-uplink-delay};
 }
 
-push @command, qw{--once --uplink-log=./contest_uplink_log -- bash -c};
+push @command, qw{--once --uplink-log=./contest_uplink_log --uplink-queue-droptail --uplink-queue-args="bytes=64000" -- bash -c};
 
 push @command, q{./sender $MAHIMAHI_BASE 9090};
 
